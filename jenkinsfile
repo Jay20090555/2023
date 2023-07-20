@@ -1,14 +1,17 @@
 pipeline {
-    agent {
-        label "built-in"
-    }
-    stages {
-        
-    stage ('deploy-index'){
-        steps {
-          sh "cp -r index.html /var/www/html"
-            sh "chmod -R 777 /var/www/html"
-        }
-        }
-    }
+ agent any
+  stages {
+   stage ('23q1-deploy') {
+    steps {
+     /*sh "yum install docker -y"
+      sh "systemctl start docker"
+      sh "systemctl enable docker"
+      sh "docker stop jayesh"*/
+      sh "docker system prune -a -f"
+      sh "docker run -itdp 80:80 --name jayesh httpd"
+      sh "docker cp index.html jayesh:/usr/local/apache2/htdocs"
+      sh "docker exec jayesh chmod -R 777 /usr/local/apache2/"
+}
+   }
+  }
 }
